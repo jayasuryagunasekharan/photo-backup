@@ -57,11 +57,17 @@ foreach ($item in $internal.GetFolder().Items()) {{
 
 
 def run_powershell_with_progress(ps_file):
+    creationflags = 0
+    if os.name == 'nt':
+        # Hide the child PowerShell window on Windows
+        creationflags = subprocess.CREATE_NO_WINDOW
+
     proc = subprocess.Popen(
         ["powershell", "-ExecutionPolicy", "Bypass", "-File", ps_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        creationflags=creationflags
     )
 
     q = queue.Queue()
